@@ -45,7 +45,8 @@ public class FileUtils {
         }
     }
 
-    private static void fillMap(HashMap < String, ArrayList < File >> fileMap, String key, File f) {
+    private static void ls
+    (HashMap < String, ArrayList < File >> fileMap, String key, File f) {
         if (fileMap.containsKey(key)) {
             ArrayList < File > al = fileMap.get(key);
             al.add(f);
