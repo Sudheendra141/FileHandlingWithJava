@@ -5,29 +5,29 @@ import java.util.Map.Entry;
 
 public class FileUtils {
 
-    static File[] createFile(int n, File path) throws IOException {
+    private static File[] createFile(int n, File path) throws IOException {
         File[] farr = new File[n];
         for (int i = 0; i < n; i++) {
 
-            farr[i] = new File(path + "\\File-" + (i + 1) + ".txt");
+            farr[i] = new File(path + "\\File-" + (i + 1) + ".doc");
             farr[i].createNewFile();
 
         }
         return farr;
     }
 
-    static void deleteFiles(File arr[]) {
+    private static void deleteFiles(File arr[]) {
         for (File f: arr) {
             f.delete();
         }
     }
 
-    static void writeInFiles(File arr[], String keyword[]) throws IOException {
+    private static void writeInFiles(File arr[], String keyword[]) throws IOException {
         for (File f: arr) {
             FileWriter fw = new FileWriter(f);;
             try {
                 int i = ((int)(Math.random() * 10)) % keyword.length;
-                fw.write("@Key: " + keyword[i] + "\n Random Text: in " + f.getName());
+                fw.write("@Key: " + keyword[i] + "\nRandom Text: in File - " + f.getName());
             } catch (Exception e) {
                 System.out.println("Exception");
             } finally {
@@ -37,16 +37,14 @@ public class FileUtils {
         }
     }
 
-    static void groupFiles(File files[], HashMap < String, ArrayList < File >> fileMap) throws IOException {
+    private static void groupFiles(File files[], HashMap < String, ArrayList < File >> fileMap) throws IOException {
         for (File f: files) {
             String key = getKey(f);
-            // System.out.println(key);
             fillMap(fileMap, key, f);
         }
     }
 
-    private static void ls
-    (HashMap < String, ArrayList < File >> fileMap, String key, File f) {
+    private static void fillMap(HashMap < String, ArrayList < File >> fileMap, String key, File f) {
         if (fileMap.containsKey(key)) {
             ArrayList < File > al = fileMap.get(key);
             al.add(f);
@@ -73,6 +71,7 @@ public class FileUtils {
             line = br.readLine();
 
         }
+        br.close();
         return null;
     }
 
@@ -90,9 +89,9 @@ public class FileUtils {
             File f = new File("C:\\Users\\msudheendra\\Desktop\\FileHandling\\Output\\" + i.getKey());
             ArrayList < File > al = i.getValue();
             f.mkdir();
-            int c = 1;
+        
             for (File file: al) {
-                File newFile = new File("C:\\Users\\msudheendra\\Desktop\\FileHandling\\Output\\" + i.getKey() + "\\" + file.getName() + ".txt");
+                File newFile = new File("C:\\Users\\msudheendra\\Desktop\\FileHandling\\Output\\" + i.getKey() + "\\" + file.getName().substring(0,file.getName().length()-4) + ".doc");
                 Files.copy(file.toPath(), newFile.toPath());
             }
 
@@ -102,20 +101,27 @@ public class FileUtils {
         // prerequisite
         String Folderpath = "C:\\Users\\msudheendra\\Desktop\\FileHandling\\Input";
         File Workspace = new File(Folderpath);
-        File files[] = createFile(10, Workspace);
-        String KeyWords[] = {
-            "Developer",
-            "Tester",
-            "Analyst",
-            "Support"
-        };
-        writeInFiles(files, KeyWords);
+        Scanner s=new Scanner(System.in);
+        System.out.println("Enter no of files: ");
+        int numberOfFilesToBeCreaed=s.nextInt();
+        
+        File files[] = createFile(numberOfFilesToBeCreaed, Workspace);
+        System.out.println(numberOfFilesToBeCreaed + " files created successfully..");
+        System.out.println("Enter no of KeyWords: ");
+        
+        String keyWords[]=new String[s.nextInt()];
+        for(int i=0;i<keyWords.length;i++)
+        {
+        	System.out.print("@key"+(i+1)+") ");
+        	keyWords[i]=s.next();
+        }
+        writeInFiles(files, keyWords);
         // grouping files with keys
         HashMap < String, ArrayList < File >> fileMap = new HashMap < > ();
         groupFiles(files, fileMap);
         printFiles(fileMap);
         addToFolder(fileMap);
-        System.out.println("Done");
+        System.out.println("Execution Done :) ");
 
     }
 
